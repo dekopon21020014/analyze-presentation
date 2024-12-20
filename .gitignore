@@ -1,3 +1,5 @@
+# 音声一時ファイル
+temp/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
