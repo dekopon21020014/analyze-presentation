@@ -6,10 +6,11 @@ import shutil
 from services.voice_analyzer import VoiceAnalyzer
 from services.slide_analyzer import SlideAnalyzer
 from config.settings import settings
+from typing import List, Optional
 
 router = APIRouter()
 
-@router.post("/analyze-voice/")
+
 @router.post("/analyze-voice")
 async def analyze_voice(file: UploadFile = File(...)):
     """Analyze uploaded voice file."""
@@ -24,10 +25,22 @@ async def analyze_voice(file: UploadFile = File(...)):
         content={"gemini_response": result}
     )
 
-@router.post("/analyze-slide/")
 @router.post("/analyze-slide")
-async def analyze_slide(file: UploadFile = File(...)):
-    """Analyze a single slide from a PDF."""
+async def analyze_slide(
+    file: UploadFile = File(...), 
+    ref: Optional[List[UploadFile]] = File(None)
+):
+    # 比較用のスライドがあった場合
+    if ref:
+        return JSONResponse(
+            status_code=200,
+            content={
+                "message": f"there are {len(ref)} ref files."
+            }
+        )
+        
+    # 比較用のスライドがなかった場合
+    """Analyze a single slide from a PDF."""    
     if file.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="PDFファイルをアップロードしてください。")
 
