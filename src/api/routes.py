@@ -9,6 +9,7 @@ from config.settings import settings
 
 router = APIRouter()
 
+@router.post("/analyze-voice/")
 @router.post("/analyze-voice")
 async def analyze_voice(file: UploadFile = File(...)):
     """Analyze uploaded voice file."""
@@ -24,6 +25,7 @@ async def analyze_voice(file: UploadFile = File(...)):
     )
 
 @router.post("/analyze-slide/")
+@router.post("/analyze-slide")
 async def analyze_slide(file: UploadFile = File(...)):
     """Analyze a single slide from a PDF."""
     if file.content_type != "application/pdf":
@@ -31,10 +33,13 @@ async def analyze_slide(file: UploadFile = File(...)):
 
     pdf_data = await file.read()
     analyzer = SlideAnalyzer()
-    result = analyzer.analyze_slide(pdf_data)
+    gemini_response, font_analysis = analyzer.analyze_slide(pdf_data)
     return JSONResponse(
         status_code=200,
-        content={"gemini_response": result}
+        content={
+            "gemini_response": gemini_response,
+            "font_analysis": font_analysis
+        }
     )
 
 @router.get("/")

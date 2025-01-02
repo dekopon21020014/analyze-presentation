@@ -35,6 +35,6 @@ class SlideAnalyzer:
 
         try:
             response = gemini_model.generate_content(prompt)
-            return response.text
+            return response.text, font_analysis
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Geminiエラー: {str(e)}")
