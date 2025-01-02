@@ -27,6 +27,8 @@ RUN git clone https://github.com/reazon-research/ReazonSpeech
 # nemo-asr をインストール
 RUN pip install ./ReazonSpeech/pkg/nemo-asr
 
+ENV PYTHONPATH=/app
+
 WORKDIR /app
 # アプリケーションのコードをコンテナにコピー
 #COPY .env main.py .
