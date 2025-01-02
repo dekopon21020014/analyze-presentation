@@ -9,7 +9,7 @@ from config.settings import settings
 
 router = APIRouter()
 
-@router.post("/analyze_voice")
+@router.post("/analyze-voice")
 async def analyze_voice(file: UploadFile = File(...)):
     """Analyze uploaded voice file."""
     file_location = f"{settings.TEMP_DIR}/{file.filename}"
@@ -18,7 +18,10 @@ async def analyze_voice(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, buffer)
     
     result = await VoiceAnalyzer.analyze(file_location)
-    return JSONResponse(status_code=200, content=result)
+    return JSONResponse(
+        status_code=200, 
+        content={"gemini_response": result}
+    )
 
 @router.post("/analyze-slide/")
 async def analyze_slide(file: UploadFile = File(...)):
@@ -29,7 +32,10 @@ async def analyze_slide(file: UploadFile = File(...)):
     pdf_data = await file.read()
     analyzer = SlideAnalyzer()
     result = analyzer.analyze_slide(pdf_data)
-    return JSONResponse(content={"analysis_result": result})
+    return JSONResponse(
+        status_code=200,
+        content={"gemini_response": result}
+    )
 
 @router.get("/")
 def read_root():

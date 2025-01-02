@@ -28,7 +28,7 @@ class VoiceAnalyzer:
             # Generate feedback
             feedback = VoiceAnalyzer._generate_feedback(transcription, frequency_data)
             
-            return {"gemini_response": feedback}
+            return feedback
         
         finally:
             for temp_file in [file_path, wav_location]:
