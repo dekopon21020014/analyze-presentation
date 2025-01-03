@@ -3,6 +3,9 @@ temp/
 # Reazonspeechのやつ
 ReazonSpeech/
 
+# テストファイル
+testfile/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
