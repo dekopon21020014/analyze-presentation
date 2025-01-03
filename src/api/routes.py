@@ -10,7 +10,6 @@ from typing import List, Optional
 
 router = APIRouter()
 
-
 @router.post("/analyze-voice")
 async def analyze_voice(file: UploadFile = File(...)):
     """Analyze uploaded voice file."""
@@ -29,29 +28,26 @@ async def analyze_voice(file: UploadFile = File(...)):
 async def analyze_slide(
     file: UploadFile = File(...), 
     ref: Optional[List[UploadFile]] = File(None)
-):
-    # 比較用のスライドがあった場合
-    if ref:
-        return JSONResponse(
-            status_code=200,
-            content={
-                "message": f"there are {len(ref)} ref files."
-            }
-        )
-        
-    # 比較用のスライドがなかった場合
-    """Analyze a single slide from a PDF."""    
+):    
     if file.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="PDFファイルをアップロードしてください。")
 
     pdf_data = await file.read()
-    analyzer = SlideAnalyzer()
+    analyzer = SlideAnalyzer()    
+    compare_result = {}
+
+    if ref: # 比較用のスライドがあった場合
+        compare_result = await analyzer.compare(pdf_data, ref)
+        
+    """Analyze a single slide from a PDF."""        
+    
     gemini_response, font_analysis = analyzer.analyze_slide(pdf_data)
     return JSONResponse(
         status_code=200,
         content={
             "gemini_response": gemini_response,
-            "font_analysis": font_analysis
+            "font_analysis": font_analysis,
+            "compare_result": compare_result
         }
     )
 
