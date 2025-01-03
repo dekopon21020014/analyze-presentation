@@ -1,5 +1,5 @@
 #!/bin/bash
-docker build -t voice .
+docker build -t presentation-analysis .
 
 # if you want to gpu
-# docker build -t voice:cuda -f Dockerfile.gpu .
+# docker build -t presentation-analysis:cuda -f Dockerfile.gpu .
